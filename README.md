@@ -25,6 +25,7 @@ nix flake init -t rt#java
 | Nombre | Descripción |
 |---|---|
 | `java` | JDK (versión configurable) + Gradle, con la toolchain de Gradle sellada |
+| `rust` | Rust con 4 devShells: general, `osdev`, `embedded` (robótica), `graphics` |
 
 ## Añadir un template nuevo
 

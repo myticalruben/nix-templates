@@ -107,6 +107,14 @@
             '';
           };
 
+        }
+        # ═════════════════════════════════════════════════════════════════
+        #  Los tres shells siguientes dependen de udev, systemd, OVMF y
+        #  Wayland: solo existen en Linux. Declararlos en macOS seria
+        #  prometer algo que fallaria al construir.
+        # ═════════════════════════════════════════════════════════════════
+        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+
           # ═══════════════════════════════════════════════════════════════
           #  osdev — kernels, bootloaders, bare metal
           # ═══════════════════════════════════════════════════════════════
