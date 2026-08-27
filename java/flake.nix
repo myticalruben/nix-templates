@@ -53,7 +53,14 @@
               echo ""
               echo "  ⬢ Java $(java -version 2>&1 | head -n1 | cut -d'"' -f2)  ·  JAVA_HOME=$JAVA_HOME"
 
-              if ls settings.gradle* build.gradle* >/dev/null 2>&1; then
+              # OJO: no usar `ls a* b*` aqui — ls devuelve error si CUALQUIERA
+              # de los globs no casa, aunque el otro si exista.
+              isGradle=""
+              for f in settings.gradle settings.gradle.kts build.gradle build.gradle.kts; do
+                [ -e "$f" ] && isGradle=1
+              done
+
+              if [ -n "$isGradle" ]; then
                 if ! grep -qs 'installations.auto-detect=false' gradle.properties; then
                   echo ""
                   echo "  ⚠  Toolchain SIN sellar: Gradle puede usar un JDK del sistema"
