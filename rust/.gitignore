@@ -1,0 +1,17 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+
+# Nix / direnv
+.direnv/
+result
+result-*
+
+# osdev
+*.iso
+*.img
+
+# IDE
+.idea/
+.vscode/

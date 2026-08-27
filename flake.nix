@@ -45,6 +45,37 @@
         '';
       };
 
+      rust = {
+        path = ./rust;
+        description = "Rust — devShells para desarrollo general, osdev, embebido/robotica y graficos";
+        welcomeText = ''
+          # Entorno Rust listo 🦀
+
+          Este template trae **cuatro** devShells. Elige el del dominio:
+
+          | Comando                    | Para que |
+          |----------------------------|----------|
+          | `nix develop`              | Rust general (stable, mold, cargo-watch) |
+          | `nix develop .#osdev`      | Kernels y bare metal (nightly, QEMU, OVMF, limine) |
+          | `nix develop .#embedded`   | Robotica y microcontroladores (probe-rs, targets ARM/RISC-V) |
+          | `nix develop .#graphics`   | wgpu / Vulkan / Bevy (loader, capas, shaderc, renderdoc) |
+
+          ## Siguientes pasos
+
+          1. `cargo init` si el proyecto esta vacio
+          2. `git add flake.nix flake.lock` — un flake ignora lo que git no rastrea
+
+          ## Nota para NO-NixOS (Ubuntu, Fedora...)
+
+          En el shell `graphics`, el loader de Vulkan viene de Nix pero los
+          drivers son del sistema. Si `vulkaninfo` no ve la GPU:
+
+          ```
+          export VK_DRIVER_FILES=/usr/share/vulkan/icd.d
+          ```
+        '';
+      };
+
       # Alias: permite `nix flake init -t <repo>` sin sufijo #java
       default = self.templates.java;
     };
