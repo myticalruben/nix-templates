@@ -1,0 +1,16 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Nix / direnv
+.direnv/
+result
+result-*
+
+# IDE
+.idea/
+*.iml
+.settings/
+.classpath
+.project
