@@ -77,7 +77,21 @@
       };
 
       # Alias: permite `nix flake init -t <repo>` sin sufijo #java
-      default = self.templates.java;
+      frontend = {
+      path = ./frontend;
+      description = "Frontend — devShells independientes para Angular y React";
+      welcomeText = ''
+# Frontend listo
+
+- `nix develop .#angular` para Angular
+- `nix develop .#react` para React/Vite
+- `nix develop` para React (shell predeterminada)
+
+Consulta `README.md` para crear una aplicación.
+'';
+    };
+
+    default = self.templates.java;
     };
   };
 }
