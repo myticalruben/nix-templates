@@ -1,0 +1,58 @@
+name: check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    name: eval (${{ matrix.template }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        template: [java, rust, frontend]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+
+      # Construye los `checks` nativos (en rust, comprueba que el ICD de
+      # lavapipe existe de verdad).
+      - name: flake check
+        run: nix flake check -L ./${{ matrix.template }}
+
+      # Evaluar macOS y aarch64 desde x86_64 solo requiere evaluar, no
+      # construir: así se cazan atributos renombrados o eliminados (por
+      # ejemplo un JDK que nixpkgs retira) sin descargar nada.
+      - name: eval de los cuatro sistemas
+        run: nix flake show --all-systems ./${{ matrix.template }}
+
+  root:
+    name: eval (raíz)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - run: nix flake check -L .
+
+  init:
+    name: los templates se copian
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - name: nix flake init en un directorio limpio
+        run: |
+          set -euo pipefail
+          for t in java rust frontend; do
+            dir=$(mktemp -d)
+            ( cd "$dir" && nix flake init -t "path:$GITHUB_WORKSPACE#$t" )
+            test -f "$dir/flake.nix"
+            test -f "$dir/flake.lock"
+            echo "ok $t -> $(find "$dir" -maxdepth 1 -type f -printf '%f ')"
+          done

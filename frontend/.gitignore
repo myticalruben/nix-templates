@@ -1,0 +1,21 @@
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+*.log
+.npm/
+.pnpm-store/
+
+# Angular
+.angular/
+
+# Nix / direnv
+.direnv/
+result
+result-*
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store

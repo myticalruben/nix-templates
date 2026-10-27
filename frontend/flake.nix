@@ -42,5 +42,7 @@
           angular = makeFrontendShell "angular";
           react = makeFrontendShell "react";
         });
+
+      formatter = forAllSystems (pkgs: pkgs.nixfmt);
     };
 }

@@ -75,15 +75,16 @@
             bacon           # `cargo check` en watch, muy comodo
           ];
 
-          # Aviso comun: rustup del sistema puede colarse por detras.
+          # Aviso comun: rustup, mise, asdf o sdkman pueden colarse por detras.
+          # En vez de buscar rustup en una ruta concreta, miramos de donde sale
+          # el `cargo` que se usaria de verdad.
           avisoRustup = ''
-            if [ -d "$HOME/.cargo/bin" ] && [ -x "$HOME/.cargo/bin/rustup" ]; then
-              actual="$(command -v cargo)"
-              case "$actual" in
-                /nix/store/*) : ;;
-                *) echo "  ⚠  cargo NO viene de Nix sino de $actual (rustup). PATH contaminado." ;;
-              esac
-            fi
+            cargo_actual="$(command -v cargo 2>/dev/null || true)"
+            case "$cargo_actual" in
+              ""|/nix/store/*) : ;;
+              *) echo "  ⚠  cargo NO viene de Nix sino de $cargo_actual"
+                 echo "     (rustup, mise, asdf o sdkman se cuelan por delante)." ;;
+            esac
           '';
         in
         {
@@ -166,8 +167,9 @@
               pkgsCross.arm-embedded.buildPackages.gdb  # gdb que entiende ARM
               # ── Robotica de mas alto nivel ──
               # Los crates -sys de robotica suelen necesitar estas:
-              udev                    # enumerar dispositivos USB/serie
-              systemd                 # libudev para el crate `serialport`
+              # `udev` ya trae libudev (lo que pide el crate `serialport`);
+              # el paquete systemd completo solo engordaba el cierre.
+              udev                    # dispositivos USB/serie + libudev
               cmake clang             # muchos wrappers de C++ los piden
             ]);
 
@@ -261,5 +263,17 @@
         });
 
       formatter = forAllSystems (pkgs: pkgs.nixfmt);
+
+      # `nix flake check` construye esto: verifica que el ICD de lavapipe que
+      # exporta el shell `graphics` existe de verdad en esta arquitectura.
+      # El bug que tuvimos fue un nombre de fichero x86_64 fijo, inexistente en
+      # aarch64; evaluar no lo detecta, construir y comprobar si.
+      checks = forAllSystems (pkgs:
+        nixpkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+          vulkan-sw-icd = pkgs.runCommand "check-vulkan-sw-icd" { } ''
+            test -f ${self.devShells.${pkgs.stdenv.hostPlatform.system}.graphics.VULKAN_SW_ICD}
+            touch $out
+          '';
+        });
     };
 }

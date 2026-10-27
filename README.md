@@ -20,15 +20,46 @@ nix registry add rt github:myticalruben/nix-templates
 nix flake init -t rt#java
 ```
 
+Cada template copia también su `flake.lock`, así que el proyecto nace con las
+versiones ya fijadas: no depende del día en que lo crees.
+
 ## Templates
 
 | Nombre | Descripción |
 |---|---|
-| `java` | JDK (versión configurable) + Gradle, con la toolchain de Gradle sellada |
+| `java` | JDK configurable (8, 11, 17, 21, 25) + Gradle, con la toolchain sellada |
 | `rust` | Rust con 4 devShells: general, `osdev`, `embedded` (robótica), `graphics` |
+| `frontend` | Node 24 + pnpm; devShells para Angular y React/Vite |
+
+`nix flake init -t <repo>` sin sufijo usa `java`, que es el template `default`.
+
+## Requisitos y límites
+
+- nixpkgs fijado: `nixos-26.05` en los tres templates, con su `flake.lock`
+  commiteado.
+- Linux y macOS, x86_64 y aarch64. En Rust, los shells `osdev`, `embedded` y
+  `graphics` solo existen en Linux.
+- `x86_64-darwin` funciona con este pin, pero nixpkgs avisa de que 26.05 será
+  la última release en soportarlo.
+- En una máquina sin GPU con Vulkan, el shell `graphics` puede usar el
+  rasterizador software del store: `export VK_DRIVER_FILES=$VULKAN_SW_ICD`.
+- `probe-rs` necesita reglas udev en `/etc` (fuera del alcance de Nix); el
+  README del template `rust` explica cómo instalarlas.
 
 ## Añadir un template nuevo
 
 1. Crea la carpeta con su `flake.nix` dentro (p. ej. `python/`).
 2. Regístrala en `templates` del `flake.nix` raíz.
-3. **`git add`** — un flake sólo ve archivos rastreados por git.
+3. Genera su lock: `cd python && nix flake lock`.
+4. **`git add`** — un flake solo ve archivos rastreados por git, y eso incluye
+   el `flake.lock`.
+
+## CI
+
+`.github/workflows/check.yml` evalúa los cuatro sistemas de cada template,
+construye sus `checks` nativos (en Rust, que el ICD de lavapipe exista) y
+comprueba que `nix flake init` deja un proyecto con `flake.nix` y `flake.lock`.
+
+## Licencia
+
+MIT — ver [LICENSE](LICENSE).
