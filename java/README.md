@@ -7,6 +7,11 @@ nix develop -c ./gradlew test   # comando suelto, sin entrar
 
 Configuración: cabecera de `flake.nix` (`jdkVersion`, `useNixGradle`).
 
+`useNixGradle = true` (por defecto) pone el `gradle` de nixpkgs en el PATH: es
+lo que hace posible `gradle init` en una carpeta vacía, donde no hay ningún
+wrapper que ejecutar. Cuando el proyecto ya tenga `gradle wrapper`, ponlo en
+`false` y trabaja con `./gradlew` (versión y checksum fijados por el wrapper).
+
 **Importante:** commitea `flake.lock`. Es lo que fija la versión exacta
 de todo. Y recuerda `git add` de los archivos nuevos: un flake sólo ve
 lo que git rastrea.

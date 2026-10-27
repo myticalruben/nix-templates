@@ -24,7 +24,10 @@
 
           1. `nix develop`                  — entrar al entorno
           2. `gradle init`                  — si el proyecto aun esta vacio
-          3. Sella la toolchain: anade a `gradle.properties`
+             (el `gradle` de nixpkgs ya viene en el PATH)
+          3. `gradle wrapper`               — fija la version en ./gradlew
+             y entonces ya puedes poner `useNixGradle = false`
+          4. Sella la toolchain: anade a `gradle.properties`
 
              ```
              org.gradle.java.installations.auto-detect=false

@@ -16,9 +16,13 @@
       jdkVersion = 21;
 
       # ¿Quieres tambien el Gradle de nixpkgs en el PATH?
-      #   false -> usas ./gradlew (el wrapper fija version + checksum)
-      #   true  -> usas `gradle` del store (offline, pero version de nixpkgs)
-      useNixGradle = false;
+      #   true  -> usas `gradle` del store (offline, pero version de nixpkgs).
+      #            Valor por defecto: sin esto no existe `gradle init`, y un
+      #            proyecto vacio tampoco tiene wrapper, asi que no hay por
+      #            donde empezar (el `welcomeText` te manda a `gradle init`).
+      #   false -> solo ./gradlew (el wrapper fija version + checksum).
+      #            Ponlo en false cuando ya hayas hecho `gradle wrapper`.
+      useNixGradle = true;
 
       # ═══════════════════════════════════════════════════════════════════
 

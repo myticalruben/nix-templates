@@ -1,0 +1,5 @@
+# Artefactos de Windows (Mark-of-the-Web). Un fichero llamado
+# "algo:Zone.Identifier" es un flujo alternativo de NTFS que se materializa
+# al copiar/descargar archivos: no debe versionarse nunca, y menos en un
+# repo de templates que se copian enteros al proyecto del usuario.
+*:Zone.Identifier

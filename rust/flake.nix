@@ -235,7 +235,11 @@
               # Rasterizador software de Vulkan, tambien de Nix: funciona en
               # CUALQUIER maquina, incluso sin GPU con soporte Vulkan.
               # NO se activa solo; para forzarlo:  export VK_DRIVER_FILES=$VULKAN_SW_ICD
-              VULKAN_SW_ICD = "${pkgs.mesa}/share/vulkan/icd.d/lvp_icd.x86_64.json";
+              # OJO: mesa nombra el ICD segun la arquitectura (lvp_icd.x86_64.json,
+              # lvp_icd.aarch64.json). Hardcodear x86_64 dejaba el shell sin
+              # rasterizador software en aarch64, que este flake tambien anuncia.
+              VULKAN_SW_ICD =
+                "${pkgs.mesa}/share/vulkan/icd.d/lvp_icd.${pkgs.stdenv.hostPlatform.parsed.cpu.name}.json";
 
               shellHook = ''
                 echo ""
