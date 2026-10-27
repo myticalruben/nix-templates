@@ -2,7 +2,7 @@
   description = "Rust: desarrollo general, sistemas operativos, robotica/embebido y graficos";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # rust-overlay da toolchains oficiales de rust-lang (stable Y nightly),
     # con `extensions` (rust-src, llvm-tools...) y `targets` (bare-metal, ARM...).
@@ -203,7 +203,7 @@
                 wayland
                 libxkbcommon
                 libdrm
-                xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXrandr
+                libx11 libxcursor libxi libxrandr
                 fontconfig
                 alsa-lib      # audio, si usas Bevy
                 udev          # mandos / gamepads
@@ -260,6 +260,6 @@
             };
         });
 
-      formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
+      formatter = forAllSystems (pkgs: pkgs.nixfmt);
     };
 }

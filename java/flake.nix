@@ -2,7 +2,7 @@
   description = "Entorno de desarrollo Java + Gradle, reproducible con Nix";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
   };
 
   outputs = { self, nixpkgs }:
@@ -12,7 +12,9 @@
       # ═══════════════════════════════════════════════════════════════════
 
       # Version del JDK. Debe coincidir con la toolchain de tu build.gradle.kts
-      # Disponibles en nixpkgs 25.05: 8, 11, 17, 21, 23, 24
+      # Disponibles en nixpkgs 26.05: 8, 11, 17, 21, 25
+      # (23 y 24 los retiro nixpkgs al llegar a EOL: el atributo sigue
+      #  existiendo, pero falla al evaluar con su propio mensaje)
       jdkVersion = 21;
 
       # ¿Quieres tambien el Gradle de nixpkgs en el PATH?
@@ -80,6 +82,6 @@
           };
         });
 
-      formatter = forAllSystems (pkgs: pkgs.nixfmt-rfc-style);
+      formatter = forAllSystems (pkgs: pkgs.nixfmt);
     };
 }
