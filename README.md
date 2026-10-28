@@ -29,18 +29,22 @@ versiones ya fijadas: no depende del día en que lo crees.
 |---|---|
 | `java` | JDK configurable (8, 11, 17, 21, 25) + Gradle, con la toolchain sellada |
 | `rust` | Rust con 4 devShells: general, `osdev`, `embedded` (robótica), `graphics` |
+| `python` | Python 3.11–3.15 (configurable) + `uv` + `ruff`, con `.venv` automático |
 | `frontend` | Node 24 + pnpm; devShells para Angular y React/Vite |
 
 `nix flake init -t <repo>` sin sufijo usa `java`, que es el template `default`.
 
 ## Requisitos y límites
 
-- nixpkgs fijado: `nixos-26.05` en los tres templates, con su `flake.lock`
+- nixpkgs fijado: `nixos-26.05` en los cuatro templates, con su `flake.lock`
   commiteado.
 - Linux y macOS, x86_64 y aarch64. En Rust, los shells `osdev`, `embedded` y
   `graphics` solo existen en Linux.
 - `x86_64-darwin` funciona con este pin, pero nixpkgs avisa de que 26.05 será
   la última release en soportarlo.
+- En Python, Nix pone el intérprete y las herramientas; las dependencias del
+  proyecto viven en `.venv` (por eso `.gitignore` lo excluye). `uv` va con
+  `UV_PYTHON_DOWNLOADS=never`: no se baja ni un CPython por su cuenta.
 - En una máquina sin GPU con Vulkan, el shell `graphics` puede usar el
   rasterizador software del store: `export VK_DRIVER_FILES=$VULKAN_SW_ICD`.
 - `probe-rs` necesita reglas udev en `/etc` (fuera del alcance de Nix); el

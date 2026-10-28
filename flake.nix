@@ -79,7 +79,34 @@
         '';
       };
 
-      # Alias: permite `nix flake init -t <repo>` sin sufijo #java
+      python = {
+        path = ./python;
+        description = "Python (version configurable) + uv + ruff — devShell con interprete y venv sellados";
+        welcomeText = ''
+          # Entorno Python listo 🐍
+
+          Nix pone el interprete, `uv` y `ruff`; tus dependencias viven en
+          `.venv`, que ya esta creado y activado.
+
+          ## Siguientes pasos
+
+          1. `uv pip install -r requirements.txt` — si ya tienes el tuyo
+          2. `uv init` y luego `uv add <paquete>` — si empiezas de cero
+          3. `ruff check .` y `ruff format .` — el LSP es el mismo binario (`ruff server`)
+          4. `nix flake check` — los tres checks del entorno
+
+          ## Cambiar de version
+
+          Edita `pythonVersion` en la cabecera de `flake.nix` y borra `.venv`:
+          un venv viejo shadowea al interprete del flake en silencio.
+
+          ## Recuerda
+
+          `git add flake.nix flake.lock` — un flake **ignora los archivos
+          que git no rastrea**.
+        '';
+      };
+
       frontend = {
       path = ./frontend;
       description = "Frontend — devShells independientes para Angular y React";
@@ -94,6 +121,7 @@ Consulta `README.md` para crear una aplicación.
 '';
     };
 
+    # Alias: permite `nix flake init -t <repo>` sin sufijo #java
     default = self.templates.java;
     };
   };

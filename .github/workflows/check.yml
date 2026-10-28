@@ -16,13 +16,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        template: [java, rust, frontend]
+        template: [java, rust, python, frontend]
     steps:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31
 
       # Construye los `checks` nativos (en rust, comprueba que el ICD de
-      # lavapipe existe de verdad).
+      # lavapipe existe de verdad; en python, que el venv se crea y que uv
+      # no necesita red para el suyo).
       - name: flake check
         run: nix flake check -L ./${{ matrix.template }}
 
@@ -49,7 +50,7 @@ jobs:
       - name: nix flake init en un directorio limpio
         run: |
           set -euo pipefail
-          for t in java rust frontend; do
+          for t in java rust python frontend; do
             dir=$(mktemp -d)
             ( cd "$dir" && nix flake init -t "path:$GITHUB_WORKSPACE#$t" )
             test -f "$dir/flake.nix"
